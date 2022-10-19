@@ -1,0 +1,132 @@
+/* Si Fulan mendapatkan pesan dari temannya yang berisi alfabet bercampur dengan asterisk (*). Dengan konsep stack, bantu Fulan membaca isi pesan
+
+Pesan:
+HA***L*OAP***A*KAB*A***R
+
+Ketentuan:
+1. Jika ketemu alfabet, push. jika ketemu *, pop
+2. cetak stack yang sudah bersih dari *.
+*/
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+#define MAX 30
+using namespace std;
+
+void push(char);
+char pop();
+string in2prefix(string, int);
+int priority(char);
+bool isFull();
+bool isEmpty();
+char stk[30];
+int top = -1;
+
+int main()
+{
+    int cont;
+    string pesan, prefix;
+    cout << "masukkan pesan : ";
+    cin >> pesan;
+    int tom = pesan.length();
+    prefix = in2prefix(pesan, tom);
+    return 0;
+}
+
+bool isFull()
+{
+    if (top == MAX - 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool isEmpty()
+{
+    if (top == -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// prosedur memasukkan operator ke stack
+void push(char oper)
+{
+    if (isFull())
+    {
+        cout << "stack penuh";
+    }
+
+    else
+    {
+        top++;
+        stk[top] = oper;
+    }
+}
+
+// fungsi untuk menghapus data dari stack
+char pop()
+{
+    char ch;
+    if (isEmpty())
+    {
+        cout << "stack kosong!!!!";
+    }
+    else
+    {
+        ch = stk[top];
+        stk[top] = '\0';
+        top--;
+        return (ch);
+    }
+    return 0;
+}
+
+/*
+ * fungsi untuk mengonversi infix ke prefix, asumsinya semua ekspresi sudah valid
+ */
+string in2prefix(string pesan, int tom)
+{
+    int i = 0;
+    string pst = "";
+
+    while (pesan[i] != '\0')
+    {
+        if (pesan[i] >= 'a' || pesan[i] >= 'A' && pesan[i] <= 'z')
+        {
+            push(pesan[i]);
+            i++;
+        }
+
+        // jika ketemu kurung tutup, pop dari stack
+        else if (pesan[i] == '*')
+        {
+            if (pesan[i] == '*')
+            {
+                while (stk[top] == '*')
+                {
+                    pst.insert(pst.end(), pop());
+                }
+                pop();
+                i++;
+            }
+        }
+    }
+
+    // pada akhirnya, remove semua operator dari stack
+    while (top != -1)
+    {
+        pst.insert(pst.end(), pop());
+    }
+    cout << "Isi pesan : " << pst;
+    return pst;
+}
